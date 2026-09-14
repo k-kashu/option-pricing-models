@@ -1,29 +1,46 @@
-# Option Pricing & Volatility Analysis Engine
-### オプション価格決定モデルおよびボラティリティ分析エンジン
+# Option Pricing & Volatility Analysis
+### オプション価格決定モデルとボラティリティ分析
 
-An end-to-end quantitative finance portfolio implementing analytical and numerical option pricing models, alongside implied volatility analysis on real market data (S&P 500 / SPY).  
-（主要なオプション価格決定モデルの解析解・数値解の実装、および S&P 500 オプション実データを用いたインプライド・ボラティリティ分析を行うクオンツ・ポートフォリオです。）
+This repository provides Python implementations of core option pricing models (Black-Scholes, Binomial Tree, Monte Carlo) and implied volatility analysis using S&P 500 (SPY) option market data.  
+（主要なオプション価格決定モデルの実装と、S&P 500 オプションデータを用いたインプライド・ボラティリティ分析を行うリポジトリです。）
 
-> **Note / 補足**: Developed as part of academic preparation for Master's applications in Quantitative Finance / Financial Engineering (MFE).  
-> （海外大学院の金融工学・クオンツ・ファイナンス修士課程［MFE / MSc in Quantitative Finance］出願用に作成中のプロジェクトです。）
+> Developed as part of preparation for graduate studies in Quantitative Finance / Financial Engineering.  
+> （金融工学・クオンツ分野の修士課程出願・研究準備として作成しています。）
+
+---
+
+## 🎯 Overview / 概要
+
+The objective of this project is twofold:
+1. **Model Convergence**: Compare numerical methods (Binomial Tree & Monte Carlo) with the Black-Scholes analytical solution.
+2. **Empirical Analysis**: Extract implied volatility smiles/skews from SPY option data using the Newton-Raphson method.
+
+（本プロジェクトの目的は以下の2点です：）
+1. **モデルの収束性検証**: 二項ツリー法・モンテカルロ法がBlack-Scholes解析解へどのように収束するかを比較・検証。
+2. **実証分析**: ニュートン・ラプソン法を用いてSPYオプションデータからインプライド・ボラティリティ・スマイル／スキューを抽出。
 
 ---
 
-## Project Overview / プロジェクト概要
-- **Objective / 目的**: Implement core option pricing engines from scratch and analyze numerical convergence against the Black-Scholes analytical solution, followed by empirical volatility smile/skew extraction using market data.  
-  （基幹となるオプション価格決定エンジンを一から実装し、解析解への数値的収束性を検証。さらに実市場データを用いたボラティリティ・スマイル／スキューの抽出を行います。）
-- **Key Features / 主要機能**:
-  - **Black-Scholes-Merton Model**: Closed-form analytical solution and Greeks calculation ($\Delta, \Gamma, \ Vega, \Theta, \rho$).  
-    （BSMモデルによる解析解およびギリシャ指標の算出）
-  - **Cox-Ross-Rubinstein (CRR) Binomial Tree**: Multi-period lattice solver supporting both European and American options.  
-    （CRR二項格子モデルによる多段階価格決定／ヨーロピアン・アメリカン両対応）
-  - **Monte Carlo Simulation**: Stochastic path generation under Geometric Brownian Motion (GBM) with vectorized NumPy operations.  
-    （幾何ブラウン運動に基づくモンテカルロ法／NumPyベクトル化処理）
-  - **Implied Volatility Solver**: Newton-Raphson numerical optimization engine for extracting market implied volatility.  
-    （ニュートン・ラプソン法を用いたIV逆算エンジン）
-- **Tech Stack / 技術スタック**: Python 3.10+, NumPy, SciPy, pandas, Matplotlib, yfinance.
+##  Implemented Modules / 実装モジュール一覧
 
----
+### Core Engines (`src/option_pricing/`)
+- **`black_scholes.py`**: Black-Scholes European option pricing & Greeks ($\Delta, \Gamma, \ Vega, \Theta, \rho$).  
+  （BSモデルによる欧州型オプション価格およびギリシャ指標の算出）
+- **`binomial_tree.py`**: Cox-Ross-Rubinstein (CRR) tree for European and American options.  
+  （CRR二項ツリーモデルによる欧州・米州型オプション価格算出）
+- **`monte_carlo.py`**: Option pricing via Geometric Brownian Motion (GBM) simulation.  
+  （幾何ブラウン運動に基づくモンテカルロ・シミュレーション）
+- **`implied_vol.py`**: Implied volatility solver using the Newton-Raphson method.  
+  （ニュートン・ラプソン法によるインプライド・ボラティリティ逆算エンジン）
+
+### Empirical Analysis (`notebooks/`)
+- **`01_model_convergence.ipynb`**: Convergence rate analysis (Binomial steps & Monte Carlo paths vs. BSM).  
+  （ステップ数・パス数に応じたBSモデルへの収束速度の可視化）
+- **`02_market_data_comparison.ipynb`**: Fetching SPY option chains via `yfinance` and benchmark testing.  
+  （`yfinance` を用いたSPYオプションデータの取得とモデル適合）
+- **`03_implied_vol_smile.ipynb`**: Plotting volatility smiles/skews across different maturities.  
+  （満期別のボラティリティ・スマイル／スキューの可視化）
+
 
 ## Project Architecture & Roadmap / 構成と進捗
 
