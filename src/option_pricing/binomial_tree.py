@@ -45,18 +45,38 @@ def crr_binomial_price(S, K, T, r, sigma, n_steps, option_type = "call", america
         V = np.maximum(S_T - K, 0)
     else:
         V = np.maximum(K - S_T, 0)
-    price = disc_factor * (p * V[1] + (1 - p) * V[0])
+    for _ in range(n_steps):
+        V = disc_factor * (p * V[1:] + (1 - p) * V[:-1])
 
-    return price
+    return V[0]
 
 
 if __name__ == "__main__":
+
     call_1 = crr_binomial_price(S = 100, K = 100, T = 1, r = 0.05, sigma = 0.2, n_steps = 1)
-    print(call_1)
+    print("call_1:",call_1)
     assert abs(call_1 - 12.1623) < 1e-4, f"call price should be 12.1623, got {call_1}"
     put_1 = crr_binomial_price(S = 100, K = 100, T = 1, r = 0.05, sigma = 0.2, n_steps = 1, option_type = "put")
-    print(put_1)
+    print("put_1:",put_1)
     assert abs(put_1 - 7.2852) < 1e-4, f"put price should be 7.2852, got {put_1}"
+    call_2 = crr_binomial_price(S = 100, K = 100, T = 1, r = 0.05, sigma = 0.2, n_steps = 2)
+    print("call_2:",call_2)
+    assert abs(call_2 - 9.5405) < 1e-4, f"call price should be 9.5405, got {call_2}"
+    put_2 = crr_binomial_price(S = 100, K = 100, T = 1, r = 0.05, sigma = 0.2, n_steps = 2, option_type = "put")
+    print("put_2:",put_2)
+    assert abs(put_2 - 4.6634) < 1e-4, f"put price should be 4.6634, got {put_2}"
+
+    # n=1000: compare with the convergence table (tolerance 1e-4)
+    call_1000 = crr_binomial_price(S = 100, K = 100, T = 1, r = 0.05, sigma = 0.2, n_steps = 1000)
+    print("call_1000:",call_1000)
+    assert abs(call_1000 - 10.4486) < 1e-4, f"call price should be 10.4486, got {call_1000}"
+    put_1000 = crr_binomial_price(S = 100, K = 100, T = 1, r = 0.05, sigma = 0.2, n_steps = 1000, option_type = "put")
+    print("put_1000:",put_1000)
+    assert abs(put_1000 - 5.5715) < 1e-4, f"put price should be 5.5715, got {put_1000}"
+
+    # BS prices from black_scholes.py (benchmark: S=K=100, T=1, r=0.05, sigma=0.2)
+    assert abs(call_1000 - 10.4506) < 1e-2, f"call price should be within 0.01 of the BS price 10.4506, got {call_1000}"
+    assert abs(put_1000 - 5.5735) < 1e-2, f"put price should be within 0.01 of the BS price 5.5735, got {put_1000}"
 
     try:
         crr_binomial_price(S = float('nan'), K = 100, T = 1, r = 0.05, sigma = 0.2, n_steps = 1)
